@@ -49,7 +49,7 @@ class Book {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-// Získání jedné konkrétní knihy podle jejího ID
+    // Získání jedné konkrétní knihy podle jejího ID
     public function getById($id) {
         $sql = "SELECT * FROM books WHERE id = :id";
         $stmt = $this->db->prepare($sql);
@@ -60,8 +60,7 @@ class Book {
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-
-// Aktualizace existující knihy
+    // Aktualizace existující knihy
     public function update(
         $id, $title, $author, $category, $subcategory, 
         $year, $price, $isbn, $description, $link, $images = []
@@ -97,8 +96,7 @@ class Book {
         ]);
     }
 
-
-// Trvalé smazání knihy z databáze
+    // Trvalé smazání knihy z databáze
     public function delete($id) {
         $sql = "DELETE FROM books WHERE id = :id";
         $stmt = $this->db->prepare($sql);
