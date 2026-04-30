@@ -49,10 +49,23 @@
                         </div>
                         
                         <div>
-                            <label for="category" class="block text-xs font-semibold text-slate-100 mb-1 uppercase tracking-wider">Kategorie</label>
-                            <input type="text" id="category" name="category" value="<?= htmlspecialchars($book['category']) ?>" 
-                                   class="w-full bg-slate-900/50 border border-slate-400 rounded-md px-4 py-2 text-slate-200 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-colors">
-                        </div>
+    <label for="category">Kategorie *</label>
+    <select id="category" name="category" required>
+        <option value="">-- Vyberte kategorii --</option>
+        
+        <?php foreach ($categories as $cat): ?>
+            <?php 
+            // Zkontrolujeme, zda ID aktuálně vykreslované kategorie odpovídá ID kategorie, kterou má kniha uloženou
+            $isSelected = ($book['category'] == $cat['id']) ? 'selected' : ''; 
+            ?>
+            
+            <option value="<?= htmlspecialchars($cat['id']) ?>" <?= $isSelected ?>>
+                <?= htmlspecialchars($cat['name']) ?>
+            </option>
+        <?php endforeach; ?>
+        
+    </select>
+</div>
                         
                         <div>
                             <label for="subcategory" class="block text-xs font-semibold text-slate-100 mb-1 uppercase tracking-wider">Podkategorie</label>

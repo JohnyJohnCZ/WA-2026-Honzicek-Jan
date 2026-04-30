@@ -41,10 +41,20 @@
                         </div>
                         
                         <div>
-                            <label for="category" class="block text-xs font-semibold text-slate-100 mb-1 uppercase tracking-wider">Kategorie</label>
-                            <input type="text" id="category" name="category" 
-                                   class="w-full bg-slate-900/50 border border-slate-400 rounded-md px-4 py-2 text-slate-200 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors">
-                        </div>
+    <label for="category">Kategorie *</label>
+    <!-- ZMĚNA: Použití select místo input a iterace přes $categories -->
+    <select id="category" name="category" required>
+        <option value="">-- Vyberte kategorii --</option>
+        
+        <?php foreach ($categories as $cat): ?>
+            <!-- Do value ukládáme ID kategorie (to se odešle do DB), ale uživateli zobrazíme název -->
+            <option value="<?= htmlspecialchars($cat['id']) ?>">
+                <?= htmlspecialchars($cat['name']) ?>
+            </option>
+        <?php endforeach; ?>
+        
+    </select>
+</div>
                         
                         <div>
                             <label for="subcategory" class="block text-xs font-semibold text-slate-100 mb-1 uppercase tracking-wider">Podkategorie</label>
