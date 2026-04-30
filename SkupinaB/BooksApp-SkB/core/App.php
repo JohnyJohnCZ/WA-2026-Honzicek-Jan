@@ -12,13 +12,15 @@ class App {
 
         // 1. KONTROLER: Existuje pro první část URL příslušný soubor?
         // Příklad: Pokud je URL "book/create", hledá se "BookController.php"
-        if (isset($url[0]) && file_exists('../app/controllers/' . ucfirst($url[0]) . 'Controller.php')) {
+        $controllersPath = __DIR__ . '/../app/controllers/';
+
+        if (isset($url[0]) && file_exists($controllersPath . ucfirst($url[0]) . 'Controller.php')) {
             $this->controller = ucfirst($url[0]) . 'Controller';
             unset($url[0]); // Odstranění použité části z pole
         }
 
         // Načtení souboru s kontrolerem a vytvoření jeho instance (objektu)
-        require_once '../app/controllers/' . $this->controller . '.php';
+        require_once $controllersPath . $this->controller . '.php';
         $this->controller = new $this->controller;
 
         // 2. METODA: Existuje pro druhou část URL funkce uvnitř kontroleru?

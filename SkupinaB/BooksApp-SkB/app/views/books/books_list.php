@@ -1,9 +1,9 @@
-<?php require_once '../app/views/layout/header.php'; ?>
+<?php require_once __DIR__ . '/../layout/header.php'; ?>    
 
     <main class="container mx-auto px-6 py-10">
         
         <div class="flex justify-between items-end mb-6">
-            <h2 class="text-3xl font-light tracking-widest text-slate-400 uppercase">Dostupné knihy</h2>
+            <h2 class="text-3xl font-light tracking-widest text-slate-200 uppercase">Dostupné knihy</h2>
         </div>
         
         <div class="bg-slate-800/50 border border-slate-700 rounded-xl overflow-hidden shadow-2xl backdrop-blur-sm">
@@ -16,12 +16,12 @@
                     <table class="w-full text-left border-collapse">
                         <thead>
                             <tr class="bg-slate-700/50 border-b border-slate-600">
-                                <th class="px-6 py-4 font-semibold uppercase text-xs text-slate-400 tracking-wider text-center">ID</th>
-                                <th class="px-6 py-4 font-semibold uppercase text-xs text-slate-400 tracking-wider">Název knihy</th>
-                                <th class="px-6 py-4 font-semibold uppercase text-xs text-slate-400 tracking-wider">Autor</th>
-                                <th class="px-6 py-4 font-semibold uppercase text-xs text-slate-400 tracking-wider">Rok</th>
-                                <th class="px-6 py-4 font-semibold uppercase text-xs text-slate-400 tracking-wider text-right">Cena</th>
-                                <th class="px-6 py-4 font-semibold uppercase text-xs text-slate-400 tracking-wider text-center">Akce</th>
+                                <th class="px-6 py-4 font-semibold uppercase text-xs text-slate-200 tracking-wider text-center">ID</th>
+                                <th class="px-6 py-4 font-semibold uppercase text-xs text-slate-200 tracking-wider">Název knihy</th>
+                                <th class="px-6 py-4 font-semibold uppercase text-xs text-slate-200 tracking-wider">Autor</th>
+                                <th class="px-6 py-4 font-semibold uppercase text-xs text-slate-200 tracking-wider">Rok</th>
+                                <th class="px-6 py-4 font-semibold uppercase text-xs text-slate-200 tracking-wider text-right">Cena</th>
+                                <th class="px-6 py-4 font-semibold uppercase text-xs text-slate-200 tracking-wider text-center">Akce</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-slate-700">
@@ -34,9 +34,12 @@
                                     <td class="px-6 py-4 text-right font-bold text-slate-200"><?= htmlspecialchars($book['price']) ?> Kč</td>
                                     <td class="px-6 py-4 text-center">
                                         <div class="flex justify-center space-x-3 text-sm">
-                                            <a href="<?= BASE_URL ?>/index.php?url=book/show/<?= $book['id'] ?>" class="text-blue-400 hover:text-white transition-colors underline decoration-blue-800 underline-offset-4">Detail</a>
-                                            <a href="<?= BASE_URL ?>/index.php?url=book/edit/<?= $book['id'] ?>" class="text-emerald-400 hover:text-white transition-colors underline decoration-emerald-800 underline-offset-4">Upravit</a>
-                                            <a href="<?= BASE_URL ?>/index.php?url=book/delete/<?= $book['id'] ?>" onclick="return confirm('Opravdu chcete tuto knihu smazat?')" class="text-rose-400 hover:text-white transition-colors underline decoration-rose-800 underline-offset-4">Smazat</a>
+                                            
+                                            <?php if (isset($_SESSION['user_id']) && $_SESSION['user_id'] === $book['created_by']): ?>
+                                                <a href="<?= BASE_URL ?>/index.php?url=book/edit/<?= $book['id'] ?>" class="text-emerald-400 hover:text-white transition-colors underline decoration-emerald-800 underline-offset-4">Upravit</a>
+                                                <a href="<?= BASE_URL ?>/index.php?url=book/delete/<?= $book['id'] ?>" onclick="return confirm('Opravdu chcete tuto knihu smazat?')" class="text-rose-400 hover:text-white transition-colors underline decoration-rose-800 underline-offset-4">Smazat</a>
+                                            <?php endif; ?>
+                                            
                                         </div>
                                     </td>
                                 </tr>
@@ -48,4 +51,4 @@
         </div>
     </main>
 
-<?php require_once '../app/views/layout/footer.php'; ?>
+<?php require_once __DIR__ . '/../layout/footer.php'; ?>    

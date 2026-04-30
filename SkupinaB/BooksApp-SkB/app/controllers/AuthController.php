@@ -4,7 +4,7 @@ class AuthController {
 
     // 1. Zobrazení registračního formuláře
     public function register() {
-        require_once '../app/views/auth/register.php';
+        require_once __DIR__ . '/../../app/views/auth/register.php';
     }
 
     // 2. Zpracování dat z registrace
@@ -36,8 +36,8 @@ class AuthController {
             }
 
             // Napojení na DB a Model
-            require_once '../app/models/Database.php';
-            require_once '../app/models/User.php';
+            require_once __DIR__ . '/../../app/models/Database.php';
+            require_once __DIR__ . '/../../app/models/User.php';
             
             $db = (new Database())->getConnection();
             $userModel = new User($db);
@@ -57,7 +57,7 @@ class AuthController {
 
     // 3. Zobrazení přihlašovacího formuláře
     public function login() {
-        require_once '../app/views/auth/login.php';
+        require_once __DIR__ . '/../../app/views/auth/login.php';
     }
 
     // 4. Zpracování přihlášení (Ověření hesla)
@@ -66,8 +66,8 @@ class AuthController {
             $email = htmlspecialchars($_POST['email'] ?? '');
             $password = $_POST['password'] ?? '';
 
-            require_once '../app/models/Database.php';
-            require_once '../app/models/User.php';
+            require_once __DIR__ . '/../../app/models/Database.php';
+            require_once __DIR__ . '/../../app/models/User.php';
             
             $db = (new Database())->getConnection();
             $userModel = new User($db);
