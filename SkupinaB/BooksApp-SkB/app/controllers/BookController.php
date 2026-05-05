@@ -5,8 +5,8 @@ class BookController {
     // 0. Výchozí metoda pro zobrazení úvodní stránky
     public function index() {
         // Načtení potřebných tříd
-        require_once __DIR__ . '/../../app/models/Database.php';
-        require_once __DIR__ . '/../../app/models/Book.php';
+        require_once '../app/models/Database.php';
+        require_once '../app/models/Book.php';
 
         // Vytvoření připojení k databázi
         $database = new Database();
@@ -17,7 +17,7 @@ class BookController {
         $books = $bookModel->getAll(); // Proměnná $books nyní obsahuje pole všech knih
         
         // Načte se (vloží) připravený soubor s HTML strukturou
-        require_once __DIR__ . '/../../app/views/books/books_list.php';
+        require_once '../app/views/books/books_list.php';
     }
 
 
@@ -83,8 +83,8 @@ class BookController {
             $uploadedImages = $this->processImageUploads(); 
 
             // 2. Komunikace s databází a modelem
-            require_once __DIR__ . '/../../app/models/Database.php';
-            require_once __DIR__ . '/../../app/models/Book.php';
+            require_once '../app/models/Database.php';
+            require_once '../app/models/Book.php';
 
             // Vytvoření připojení k DB
             $database = new Database();
@@ -135,8 +135,8 @@ class BookController {
         }
 
         // Načtení potřebných tříd a spojení s databází
-        require_once __DIR__ . '/../../app/models/Database.php';
-        require_once __DIR__ . '/../../app/models/Book.php';
+        require_once '../app/models/Database.php';
+        require_once '../app/models/Book.php';
 
         $database = new Database();
         $db = $database->getConnection();
@@ -193,11 +193,16 @@ class BookController {
         }
 
         // Načtení potřebných tříd a spojení s databází
-        require_once __DIR__ . '/../../app/models/Database.php';
-        require_once __DIR__ . '/../../app/models/Book.php';
+        require_once '../app/models/Database.php';
+        require_once '../app/models/Book.php';
+        require_once '../app/models/Category.php';
 
         $database = new Database();
         $db = $database->getConnection();
+
+        // ZMĚNA: Získání seznamu kategorií
+        $categoryModel = new Category($db);
+        $categories = $categoryModel->getAllCategories();
 
         // Získání dat o konkrétní knize
         $bookModel = new Book($db);
@@ -221,7 +226,7 @@ class BookController {
 
         // Pokud je vše v pořádku, načte se připravený soubor s HTML formulářem pro úpravy.
         // Šablona bude mít automaticky přístup k proměnné $book.
-        require_once __DIR__ . '/../../app/views/books/book_edit.php';
+        require_once '../app/views/books/book_edit.php';
     }
 
     // 5. Zpracování dat odeslaných z editačního formuláře
@@ -244,8 +249,8 @@ class BookController {
 
             // 🛡️ ZMĚNA: Komunikaci s databází jsme museli přesunout nahoru.
             // Musíme totiž nejprve zjistit, čí ta kniha vlastně je, než cokoli změníme.
-            require_once __DIR__ . '/../../app/models/Database.php';
-            require_once __DIR__ . '/../../app/models/Book.php';
+            require_once '../app/models/Database.php';
+            require_once '../app/models/Book.php';
 
             $database = new Database();
             $db = $database->getConnection();
@@ -290,7 +295,7 @@ class BookController {
             // (Objekt $bookModel už máme vytvořený nahoře, takže ho jen použijeme)
             $isUpdated = $bookModel->update(
                 $id, $title, $author, $category, $subcategory, 
-                $year, $price, $isbn, $description, $link, $uploadedImages
+                $year, $price, $isbn, $description, $link, $uploadedImages, $_SESSION['user_id']
             );
 
             // 4. Vyhodnocení výsledku a přesměrování
@@ -308,6 +313,38 @@ class BookController {
             // Pokud by někdo zkusil přistoupit na URL napřímo bez odeslání formuláře (žlutá notifikace)
             $this->addNoticeMessage('Pro úpravu knihy je nutné odeslat formulář.');
         }
+    }
+
+    // 6. Zobrazení a tak
+    public function show($id = null) {
+        // Kontrola, zda bylo v URL předáno ID
+        if (!$id) {
+            $this->addErrorMessage('Nebylo zadáno ID knihy ke zobrazení.');
+            header('Location: ' . BASE_URL . '/index.php');
+            exit;
+        }
+
+        // Načtení potřebných tříd a spojení s databází
+        require_once '../app/models/Database.php';
+        require_once '../app/models/Book.php';
+
+        $database = new Database();
+        $db = $database->getConnection();
+
+        // Získání dat o konkrétní knize
+        $bookModel = new Book($db);
+        $book = $bookModel->getById($id); // Proměnná $book nyní obsahuje asociativní pole dat
+
+        // Bezpečnostní kontrola: Zda kniha s daným ID vůbec existuje
+        if (!$book) {
+            // Pokud knihu někdo mezitím smazal, nebo uživatel zadal do URL neexistující ID
+            $this->addErrorMessage('Požadovaná kniha nebyla v databázi nalezena.');
+            header('Location: ' . BASE_URL . '/index.php');
+            exit;
+        }
+
+        // Pokud je vše v pořádku, načte se připravený soubor se zobrazením detailu.
+        require_once '../app/views/books/book_show.php';
     }
 
     // --- Pomocné metody pro systém notifikací ---
@@ -349,18 +386,23 @@ class BookController {
                 if ($_FILES['images']['error'][$i] === UPLOAD_ERR_OK) {
                     
                     $tmpName = $_FILES['images']['tmp_name'][$i];
-                    $originalName = basename($_FILES['images']['name'][$i]);
-                    // Zjištění koncovky (např. jpg, png)
-                    $fileExtension = strtolower(pathinfo($originalName, PATHINFO_EXTENSION));
+                    
+                    // Lepší kontrola typu souboru - podle MIME typu, ne podle koncovky
+                    $fileMimeType = finfo_file(finfo_open(FILEINFO_MIME_TYPE), $tmpName);
 
-                    // Můžeme zde přidat i kontrolu povolených formátů (volitelné)
-                    $allowedExtensions = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
-                    if (!in_array($fileExtension, $allowedExtensions)) {
+                    $AllowedMimeTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+                    
+                    if (!in_array($fileMimeType, $AllowedMimeTypes)) {
+                        $this->addErrorMessage('Formát obrázku není podporován.');
                         continue; // Přeskočíme nepodporovaný soubor
                     }
 
                     // 1. Vygenerování unikátního jména pomocí aktuálního času a náhodného řetězce
                     // např: book_64a2b1c_8f2a.jpg
+                    $originalName = basename($_FILES['images']['name'][$i]);
+                    // Zjištění koncovky (např. jpg, png)
+                    $fileExtension = strtolower(pathinfo($originalName, PATHINFO_EXTENSION));
+                    
                     $newName = 'book_' . uniqid() . '_' . substr(md5(mt_rand()), 0, 4) . '.' . $fileExtension;
                     $targetFilePath = $uploadDir . $newName;
 

@@ -1,4 +1,4 @@
-<?php require_once __DIR__ . '/../layout/header.php'; ?>
+<?php require_once '../app/views/layout/header.php'; ?>
 
 <main class="container mx-auto px-6 py-10 flex-grow flex items-center justify-center">
     <div class="w-full max-w-md">
@@ -39,4 +39,4 @@
     </div>
 </main>
 
-<?php require_once __DIR__ . '/../layout/footer.php'; ?>
+<?php require_once '../app/views/layout/footer.php'; ?>

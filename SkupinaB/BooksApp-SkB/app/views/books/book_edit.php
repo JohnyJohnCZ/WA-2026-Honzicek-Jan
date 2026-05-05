@@ -1,4 +1,4 @@
-<?php require_once __DIR__ . '/../layout/header.php'; ?>    
+<?php require_once '../app/views/layout/header.php'; ?>
 
     <main class="container mx-auto px-6 py-10 flex-grow">
         
@@ -69,7 +69,7 @@
                         
                         <div>
                             <label for="subcategory" class="block text-xs font-semibold text-slate-100 mb-1 uppercase tracking-wider">Podkategorie</label>
-                            <input type="text" id="subcategory" name="subcategory" value="<?= htmlspecialchars($book['subcategory']) ?>" 
+                            <input type="text" id="subcategory" name="subcategory" value="<?= htmlspecialchars($book['subcategory'] ?? '') ?>" 
                                    class="w-full bg-slate-900/50 border border-slate-400 rounded-md px-4 py-2 text-slate-200 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-colors">
                         </div>
                         
@@ -93,6 +93,16 @@
                         
                         <div class="md:col-span-2">
                             <label class="block text-xs font-semibold text-slate-100 mb-2 uppercase tracking-wider">Obrázky knihy</label>
+                            <!-- TODO: styling -->
+                            <?php 
+                            $images = json_decode($book['images']);
+                            if (!empty($images)):
+                                foreach ($images as $image):
+                            ?>
+                                    <p><?= $image ?></p>
+                                <?php endforeach;?>
+                                <p>Upozornění: Pokud nyní nahrajete nové soubory, tyto staré budou přepsány.</p>
+                            <?php endif;?>
                             <div class="w-full">
                                 <label for="images" class="flex flex-col items-center justify-center w-full h-24 border-2 border-slate-400 border-dashed rounded-lg cursor-pointer bg-slate-800/30 hover:bg-slate-700/50 hover:border-blue-400 transition-colors">
                                     <div class="flex flex-col items-center justify-center pt-5 pb-6">
@@ -145,4 +155,4 @@
         </script>
     </main>
 
-<?php require_once __DIR__ . '/../layout/footer.php'; ?>    
+<?php require_once '../app/views/layout/footer.php'; ?>

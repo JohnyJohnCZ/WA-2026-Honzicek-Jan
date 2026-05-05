@@ -1,4 +1,4 @@
-<?php require_once __DIR__ . '/../layout/header.php'; ?>
+<?php require_once '../app/views/layout/header.php'; ?>
 
 <main class="container mx-auto px-6 py-10 flex-grow flex items-center justify-center">
     <div class="w-full max-w-2xl">
@@ -39,6 +39,10 @@
                                class="w-full bg-slate-900/50 border border-slate-400 rounded-md px-4 py-2 text-slate-200 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors">
                     </div>
 
+                    <p class="md:col-span-2 text-slate-500 text-sm">
+                        Heslo musí obsahovat velká i malá písmena a čísla a být nejméně 8 znaků dlouhé.
+                    </p>
+
                     <div class="md:col-span-2 mt-4">
                         <h3 class="text-blue-400 text-xs font-bold uppercase tracking-widest border-b border-slate-700 pb-2 mb-4">Osobní údaje (Volitelné)</h3>
                     </div>
@@ -76,4 +80,4 @@
     </div>
 </main>
 
-<?php require_once __DIR__ . '/../layout/footer.php'; ?>
+<?php require_once '../app/views/layout/footer.php'; ?>

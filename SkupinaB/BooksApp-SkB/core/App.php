@@ -12,7 +12,7 @@ class App {
 
         // 1. KONTROLER: Existuje pro první část URL příslušný soubor?
         // Příklad: Pokud je URL "book/create", hledá se "BookController.php"
-        $controllersPath = __DIR__ . '/../app/controllers/';
+        $controllersPath = '../app/controllers/';
 
         if (isset($url[0]) && file_exists($controllersPath . ucfirst($url[0]) . 'Controller.php')) {
             $this->controller = ucfirst($url[0]) . 'Controller';

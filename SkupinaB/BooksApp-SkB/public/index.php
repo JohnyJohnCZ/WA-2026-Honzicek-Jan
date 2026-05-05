@@ -16,7 +16,7 @@ define('BASE_URL', $baseDir);
 
 
 // Načtení třídy routeru, která se postará o zpracování URL
-require_once __DIR__ . '/../core/App.php';
+require_once '../core/App.php';
 
 // Inicializace aplikace a spuštění procesu routování
 $app = new App();

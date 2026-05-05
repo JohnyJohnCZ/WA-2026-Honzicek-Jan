@@ -1,4 +1,5 @@
-<?php require_once __DIR__ . '/../layout/header.php'; ?>
+<?php require_once '../app/views/layout/header.php'; ?>
+
 
     <main class="container mx-auto px-6 py-10 flex-grow">
         
@@ -103,6 +104,8 @@
                     </div>
                 </form>
             </div>
+                </form>
+            </div>
         </div>
         <script>
             // Najdeme naše HTML prvky podle ID
@@ -134,5 +137,5 @@
         </script>    
     </main>
 
-<?php require_once __DIR__ . '/../layout/footer.php'; ?>    
+<?php require_once '../app/views/layout/footer.php'; ?>
 

@@ -4,7 +4,7 @@ class AuthController {
 
     // 1. Zobrazení registračního formuláře
     public function register() {
-        require_once __DIR__ . '/../../app/views/auth/register.php';
+        require_once '../app/views/auth/register.php';
     }
 
     // 2. Zpracování dat z registrace
@@ -35,9 +35,18 @@ class AuthController {
                 exit;
             }
 
+            // Kontrola síly hesla
+            // Regex pro "obsahuje velké písmeno, malé písmeno, číslo, alespoň 8 znaků"
+            $passwordRegex = '/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/';
+            if (!preg_match($passwordRegex, $password)) {
+                $this->addErrorMessage('Zadané heslo nesplňuje podmínky a je slabé.');
+                header('Location: ' . BASE_URL . '/index.php?url=auth/register');
+                exit;
+            }
+
             // Napojení na DB a Model
-            require_once __DIR__ . '/../../app/models/Database.php';
-            require_once __DIR__ . '/../../app/models/User.php';
+            require_once '../app/models/Database.php';
+            require_once '../app/models/User.php';
             
             $db = (new Database())->getConnection();
             $userModel = new User($db);
@@ -57,7 +66,7 @@ class AuthController {
 
     // 3. Zobrazení přihlašovacího formuláře
     public function login() {
-        require_once __DIR__ . '/../../app/views/auth/login.php';
+        require_once '../app/views/auth/login.php';
     }
 
     // 4. Zpracování přihlášení (Ověření hesla)
@@ -66,8 +75,8 @@ class AuthController {
             $email = htmlspecialchars($_POST['email'] ?? '');
             $password = $_POST['password'] ?? '';
 
-            require_once __DIR__ . '/../../app/models/Database.php';
-            require_once __DIR__ . '/../../app/models/User.php';
+            require_once '../app/models/Database.php';
+            require_once '../app/models/User.php';
             
             $db = (new Database())->getConnection();
             $userModel = new User($db);
