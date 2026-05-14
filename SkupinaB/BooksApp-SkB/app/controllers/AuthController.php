@@ -84,14 +84,12 @@ class AuthController {
             // Najdeme uživatele podle emailu
             $user = $userModel->findByEmail($email);
 
-            // ZABEZPEČENÍ: Zkontrolujeme, zda uživatel existuje a zda zadané heslo 
-            // odpovídá zahašovanému heslu v databázi (pomocí password_verify)
+            // ZABEZPEČENÍ: Zkontrolujeme, zda uživatel existuje a heslo sedí
             if ($user && password_verify($password, $user['password'])) {
                 
-                // ÚSPĚCH: Uložíme si důležitá data do Session
+                // ÚSPĚCH: Uložíme data do Session
                 $_SESSION['user_id'] = $user['id'];
-                
-                // Uložíme si jméno pro uvítání (přezdívku, nebo uživatelské jméno)
+                $_SESSION['is_admin'] = $user['is_admin']; 
                 $_SESSION['user_name'] = !empty($user['nickname']) ? $user['nickname'] : $user['username'];
 
                 $this->addSuccessMessage('Vítejte zpět, ' . $_SESSION['user_name'] . '!');
@@ -99,7 +97,7 @@ class AuthController {
                 exit;
                 
             } else {
-                // CHYBA: Záměrně neříkáme, zda byl špatný email, nebo heslo (bezpečnost!)
+                // CHYBA: Nesprávné údaje
                 $this->addErrorMessage('Nesprávný e-mail nebo heslo.');
                 header('Location: ' . BASE_URL . '/index.php?url=auth/login');
                 exit;

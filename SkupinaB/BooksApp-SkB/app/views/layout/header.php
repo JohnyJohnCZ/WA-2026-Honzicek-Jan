@@ -10,9 +10,7 @@
 
     <header class="bg-gradient-to-b from-slate-700 to-slate-900 border-b border-slate-600 shadow-xl">
         <div class="container mx-auto px-6 py-4 flex flex-col md:flex-row justify-between items-center">
-            <h1 class="text-2xl font-bold tracking-tight text-white uppercase italic">
-                Aplikace <span class="text-blue-400">Knihovna</span>
-            </h1>
+            <img src="logo.png" alt="Logo Knihovna" class="h-10 mb-2 md:mb-0">
             
             <nav class="mt-4 md:mt-0">
                 <ul class="flex items-center space-x-6">
